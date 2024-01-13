@@ -4,11 +4,12 @@ import Dropzone from "@/components/Dropzone";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase";
 import { FileType } from "@/typings";
+import TableWrapper from "@/components/table/TableWrapper";
 
 async function Dashboard() {
   const { userId } = auth();
 
-  const docResults = await getDocs(collection(db, "users", userId, "files"));
+  const docResults = await getDocs(collection(db, "users", userId!, "files"));
   const skeletonFiles: FileType[] = docResults.docs?.map((doc) => ({
     id: doc?.id,
     filename: doc.data().filename || doc?.id,
@@ -20,13 +21,15 @@ async function Dashboard() {
   }));
 
   return (
-    <div className="">
+    <div className="border-t">
       <Dropzone />
 
-      <section className="">
-        <h2 className="">All Files</h2>
+      <section className="container space-y-5">
+        <h2 className="font-bold">All Files</h2>
 
-        <div className=""></div>
+        <div className="">
+          <TableWrapper skeletonFiles={skeletonFiles} />
+        </div>
       </section>
     </div>
   );
